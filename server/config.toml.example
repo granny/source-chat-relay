@@ -73,3 +73,6 @@ EventFormatSimplePlayerChat = "%username%: %message%"
 
 # Display Name format (available placeholders: %toprole%, %username% %nickname%)
 ChatMessageDisplayName = "%username%"
+
+# No Role format
+ChatMessageNoRoleName = "Guest"

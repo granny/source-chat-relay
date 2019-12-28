@@ -33,6 +33,7 @@ type MsgConfig struct {
 	EventFormatSimplePlayerDisconnect string `toml:"EventFormatSimplePlayerDisconnect"`
 	EventFormatSimplePlayerChat       string `toml:"EventFormatSimplePlayerChat"`
 	ChatMessageDisplayName            string `toml:"ChatMessageDisplayName"`
+	ChatMessageNoRoleName             string `toml:"ChatMessageNoRoleName"`
 }
 
 type Config_t struct {
