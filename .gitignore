@@ -12,7 +12,11 @@
 *.out
 
 # SourceMod Plugin Bin
-
+*.inc
+compile.dat
+spcomp
+!Source-Chat-Relay.inc
+!SCR-Version.inc
 *.smx
 
 # Go DEP
@@ -49,3 +53,6 @@ server/ui/template/dist/*
 .cache/
 .docz
 public
+server/build.bat
+server/server
+server/run.bat
