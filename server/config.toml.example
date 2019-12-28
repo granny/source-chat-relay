@@ -70,3 +70,6 @@ EventFormatSimplePlayerDisconnect = "Player Disconnected: %data%"
 
 # Player chat format if SimpleMessage is enabled
 EventFormatSimplePlayerChat = "%username%: %message%"
+
+# Display Name format (available placeholders: %toprole%, %username% %nickname%)
+ChatMessageDisplayName = "%username%"

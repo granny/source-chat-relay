@@ -58,12 +58,22 @@ func Initialize() {
 				transformed = m.Content
 			}
 
-			displayname := m.Author.Username
+			displayname := strings.ReplaceAll(config.Config.Messages.ChatMessageDisplayName, "%username%", m.Author.Username)
 
-			member, err := session.GuildMember(m.GuildID, m.Author.ID)
+			if strings.Contains(config.Config.Messages.ChatMessageDisplayName, "%nickname%") {
+				member, err := session.GuildMember(m.GuildID, m.Author.ID)
 
-			if err == nil && len(member.Nick) != 0 {
-				displayname = member.Nick
+				if err == nil {
+
+					if len(member.Nick) != 0 {
+						displayname = strings.ReplaceAll(displayname, "%nickname%", member.Nick)
+					} else {
+						displayname = strings.ReplaceAll(displayname, "%nickname%", m.Author.Username)
+					}
+				} else {
+					displayname = strings.ReplaceAll(displayname, "%nickname%", m.Author.Username)
+				}
+
 			}
 
 			message := &protocol.ChatMessage{
