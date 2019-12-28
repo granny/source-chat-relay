@@ -4,6 +4,7 @@
 #include <socket>
 #include <morecolors> // Morecolors defines a max buffer as well as bytebuffer but bytebuffer does if defined check
 #include <bytebuffer>
+#include <ccc>
 
 #pragma semicolon 1
 
@@ -706,16 +707,20 @@ void DispatchMessage(int iClient, const char[] sMessage)
 		return;
 	}
 
+	char tag[MAX_NAME_LENGTH], sBuffer[MAX_NAME_LENGTH];
+	CCC_GetTag(iClient, tag, sizeof tag);
+	Format(sBuffer, sizeof sBuffer, "%s %s", tag, sName);
+
 	Call_StartForward(g_hMessageSendForward);
 	Call_PushCell(iClient);
-	Call_PushStringEx(sName, MAX_NAME_LENGTH, SM_PARAM_STRING_UTF8 | SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
+	Call_PushStringEx(sBuffer, MAX_NAME_LENGTH, SM_PARAM_STRING_UTF8 | SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
 	Call_PushStringEx(tMessage, MAX_COMMAND_LENGTH, SM_PARAM_STRING_UTF8 | SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
 	Call_Finish(aResult);
 
 	if (aResult >= Plugin_Handled)
 		return;
 
-	ChatMessage(IdentificationSteam, sID, sName, tMessage).Dispatch();
+	ChatMessage(IdentificationSteam, sID, sBuffer, tMessage).Dispatch();
 }
 
 public int Native_SendMessage(Handle plugin, int numParams)
