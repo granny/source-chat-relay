@@ -6,12 +6,13 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/rumblefrog/source-chat-relay/server/packet"
 	"github.com/rumblefrog/source-chat-relay/server/config"
+	"github.com/rumblefrog/source-chat-relay/server/packet"
+)
 
 type IdentificationType uint8
 
