@@ -109,7 +109,6 @@ func (m *EventMessage) Webhook() *discordgo.WebhookParams {
 	}
 
 	return &discordgo.WebhookParams{
-		Content:  str,
-		Username: "Imperial TF2",
+		Content: str,
 	}
 }
