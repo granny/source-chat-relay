@@ -1,12 +1,12 @@
 package protocol
 
 import (
-	"time"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/rumblefrog/source-chat-relay/server/packet"
 	"github.com/rumblefrog/source-chat-relay/server/config"
+	"github.com/rumblefrog/source-chat-relay/server/packet"
 )
 
 type EventMessage struct {
@@ -89,5 +89,27 @@ func (m *EventMessage) Embed() *discordgo.MessageEmbed {
 				Value: m.Data,
 			},
 		},
+	}
+}
+
+func (m *EventMessage) Webhook() *discordgo.WebhookParams {
+	var str string
+
+	switch m.Event {
+	case "Map Start":
+		str = strings.ReplaceAll(config.Config.Messages.EventFormatSimpleMapStart, "%data%", m.Data)
+	case "Map Ended":
+		str = strings.ReplaceAll(config.Config.Messages.EventFormatSimpleMapEnd, "%data%", m.Data)
+	case "Player Connected":
+		str = strings.ReplaceAll(config.Config.Messages.EventFormatSimplePlayerConnect, "%data%", m.Data)
+	case "Player Disconnected":
+		str = strings.ReplaceAll(config.Config.Messages.EventFormatSimplePlayerDisconnect, "%data%", m.Data)
+	default:
+		str = strings.ReplaceAll(strings.ReplaceAll(config.Config.Messages.EventFormatSimple, "%data%", m.Data), "%event%", m.Event)
+	}
+
+	return &discordgo.WebhookParams{
+		Content:  str,
+		Username: "Imperial TF2",
 	}
 }

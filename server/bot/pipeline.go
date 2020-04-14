@@ -23,6 +23,8 @@ func Listen() {
 						tEntity.ReceiveIntersectsWith(entity.DeliverableSendChannels(message)) {
 						if !config.Config.Bot.SimpleMessage {
 							RelayBot.ChannelMessageSendEmbed(channel.ID, message.Embed())
+						} else if config.Config.Bot.Webhook {
+							RelayBot.WebhookExecute(config.Config.Bot.WebhookID, config.Config.Bot.WebhookToken, false, message.Webhook())
 						} else {
 							content := TransformMentions(RelayBot, channel.ID, message.Plain())
 							RelayBot.ChannelMessageSend(channel.ID, content)

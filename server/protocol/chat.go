@@ -3,13 +3,15 @@ package protocol
 import (
 	"encoding/binary"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"regexp"
 	"time"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/rumblefrog/source-chat-relay/server/packet"
 	"github.com/rumblefrog/source-chat-relay/server/config"
-)
 
 type IdentificationType uint8
 
@@ -108,6 +110,21 @@ func (m *ChatMessage) Embed() *discordgo.MessageEmbed {
 	}
 }
 
+func (m *ChatMessage) Webhook() *discordgo.WebhookParams {
+	re := regexp.MustCompile(`<avatarFull><!\[CDATA\[(.+)]]><\/avatarFull>`)
+	var str string
+	data, err := getXML(m.IDType.FormatUrlXML(m.ID))
+
+	if err == nil {
+		str = re.FindStringSubmatch(data)[1]
+	}
+	return &discordgo.WebhookParams{
+		AvatarURL: str,
+		Content:   m.Message,
+		Username:  m.Username,
+	}
+}
+
 func ParseIdentificationType(t uint8) IdentificationType {
 	if t >= uint8(IdentificationTypeCount) {
 		return IdentificationInvalid
@@ -123,4 +140,32 @@ func (i IdentificationType) FormatURL(id string) string {
 	default:
 		return ""
 	}
+}
+
+func (i IdentificationType) FormatUrlXML(id string) string {
+	switch i {
+	case IdentificationSteam:
+		return "https://steamcommunity.com/profiles/" + id + "?xml=1"
+	default:
+		return ""
+	}
+}
+
+func getXML(url string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", fmt.Errorf("GET error: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("Status error: %v", resp.StatusCode)
+	}
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("Read body: %v", err)
+	}
+
+	return string(data), nil
 }

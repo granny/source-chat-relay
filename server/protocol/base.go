@@ -12,6 +12,7 @@ type Deliverable interface {
 	Author() string
 	Plain() string
 	Embed() *discordgo.MessageEmbed
+	Webhook() *discordgo.WebhookParams
 }
 
 type BaseMessage struct {
