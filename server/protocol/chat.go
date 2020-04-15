@@ -127,7 +127,7 @@ func (m *ChatMessage) Webhook() *discordgo.WebhookParams {
 
 	if err == nil {
 		reg := re.FindStringSubmatch(data)
-		if len(reg) > 2 {
+		if len(reg) > 1 {
 			str = re.FindStringSubmatch(data)[1]
 		}
 	}
