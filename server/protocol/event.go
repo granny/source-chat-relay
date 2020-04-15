@@ -129,6 +129,7 @@ func (m *EventMessage) Webhook() *discordgo.WebhookParams {
 	}
 
 	return &discordgo.WebhookParams{
-		Content: str,
+		Username: m.EntityName,
+		Content:  str,
 	}
 }

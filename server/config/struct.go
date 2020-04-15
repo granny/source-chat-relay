@@ -9,8 +9,6 @@ type BotConfig struct {
 	Token         string `toml:"Token"`
 	SimpleMessage bool   `toml:"SimpleMessage"`
 	Webhook       bool   `toml:"Webhook"`
-	WebhookID     string `toml:"WebhookID"`
-	WebhookToken  string `toml:"WebhookToken"`
 	ListenToBots  bool   `toml:"ListenToBots"`
 }
 
