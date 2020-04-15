@@ -126,7 +126,10 @@ func (m *ChatMessage) Webhook() *discordgo.WebhookParams {
 	data, err := getXML(m.IDType.FormatUrlXML(m.ID))
 
 	if err == nil {
-		str = re.FindStringSubmatch(data)[1]
+		reg := re.FindStringSubmatch(data)
+		if len(reg) > 2 {
+			str = re.FindStringSubmatch(data)[1]
+		}
 	}
 
 	phrases := [2]string{"@everyone", "@here"}
