@@ -111,6 +111,15 @@ func (m *ChatMessage) Embed() *discordgo.MessageEmbed {
 	}
 }
 
+func contains(arr [2]string, str string) bool {
+	for _, a := range arr {
+		if strings.Contains(str, a) {
+			return true
+		}
+	}
+	return false
+}
+
 func (m *ChatMessage) Webhook() *discordgo.WebhookParams {
 	re := regexp.MustCompile(`<avatarFull><!\[CDATA\[(.+)]]><\/avatarFull>`)
 	var str string
@@ -119,6 +128,14 @@ func (m *ChatMessage) Webhook() *discordgo.WebhookParams {
 	if err == nil {
 		str = re.FindStringSubmatch(data)[1]
 	}
+
+	phrases := [2]string{"@everyone", "@here"}
+
+	for contains(phrases, m.Message) {
+		m.Message = strings.ReplaceAll(m.Message, phrases[0], "")
+		m.Message = strings.ReplaceAll(m.Message, phrases[1], "")
+	}
+
 	return &discordgo.WebhookParams{
 		AvatarURL: str,
 		Content:   m.Message,
