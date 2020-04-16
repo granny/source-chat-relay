@@ -63,7 +63,7 @@ func findWebhook(webhooks []*discordgo.Webhook, channelID string) (id string, to
 			ltoken = webhook.Token
 		}
 	}
-	if id == "" {
+	if lid == "" {
 		wh, err := RelayBot.WebhookCreate(channelID, webhookName.String(), "")
 		if err == nil {
 			lid = wh.ID
