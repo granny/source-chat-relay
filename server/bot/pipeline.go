@@ -32,21 +32,7 @@ func Listen() {
 								logrus.Error(err.Error)
 							} else {
 								var id, token string
-								var webhookName strings.Builder
-								webhookName.WriteString("SCR ")
-								webhookName.WriteString(channel.ID)
-								for _, webhook := range webhooks {
-									if strings.Contains(webhook.Name, webhookName.String()) {
-										id = webhook.ID
-										token = webhook.Token
-									}
-								}
-								if id == "" {
-									wh, err := RelayBot.WebhookCreate(channel.ID, webhookName.String(), "")
-									if err == nil {
-										id = wh.ID
-										token = wh.Token
-									}
+									id, token = findWebhook(webhooks, channel.ID)
 								}
 								RelayBot.WebhookExecute(id, token, false, message.Webhook())
 							}
@@ -59,4 +45,25 @@ func Listen() {
 			}
 		}
 	}
+}
+
+func findWebhook(webhooks []*discordgo.Webhook, channelID string) (id string, token string) {
+	var lid, ltoken string
+	var webhookName strings.Builder
+	webhookName.WriteString("SCR ")
+	webhookName.WriteString(channelID)
+	for _, webhook := range webhooks {
+		if strings.Contains(webhook.Name, webhookName.String()) {
+			lid = webhook.ID
+			ltoken = webhook.Token
+		}
+	}
+	if id == "" {
+		wh, err := RelayBot.WebhookCreate(channelID, webhookName.String(), "")
+		if err == nil {
+			lid = wh.ID
+			ltoken = wh.Token
+		}
+	}
+	return lid, ltoken
 }

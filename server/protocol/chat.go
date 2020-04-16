@@ -111,7 +111,7 @@ func (m *ChatMessage) Embed() *discordgo.MessageEmbed {
 	}
 }
 
-func contains(arr [2]string, str string) bool {
+func contains(arr []string, str string) bool {
 	for _, a := range arr {
 		if strings.Contains(str, a) {
 			return true
@@ -120,27 +120,23 @@ func contains(arr [2]string, str string) bool {
 	return false
 }
 
-func (m *ChatMessage) Webhook() *discordgo.WebhookParams {
-	re := regexp.MustCompile(`<avatarFull><!\[CDATA\[(.+)]]><\/avatarFull>`)
-	var str string
-	data, err := getXML(m.IDType.FormatUrlXML(m.ID))
-
-	if err == nil {
-		reg := re.FindStringSubmatch(data)
-		if len(reg) > 1 {
-			str = re.FindStringSubmatch(data)[1]
+func cutPhrases(s string, phrases []string) string {
+	for contains(phrases, s) {
+		for _, str := range phrases {
+			s = strings.ReplaceAll(s, str, "")
 		}
 	}
+	return s
+}
 
-	phrases := [2]string{"@everyone", "@here"}
+func (m *ChatMessage) Webhook() *discordgo.WebhookParams {
 
-	for contains(phrases, m.Message) {
-		m.Message = strings.ReplaceAll(m.Message, phrases[0], "")
-		m.Message = strings.ReplaceAll(m.Message, phrases[1], "")
-	}
+	phrases := []string{"@everyone", "@here"}
+
+	m.Message = cutPhrases(m.Message, phrases)
 
 	return &discordgo.WebhookParams{
-		AvatarURL: str,
+		AvatarURL: getAvatarURL(m.IDType.FormatUrlXML(m.ID)),
 		Content:   m.Message,
 		Username:  m.Username,
 	}
@@ -189,4 +185,19 @@ func getXML(url string) (string, error) {
 	}
 
 	return string(data), nil
+}
+
+func getAvatarURL(url string) string {
+	re := regexp.MustCompile(`<avatarFull><!\[CDATA\[(.+)]]><\/avatarFull>`)
+	var str string
+	data, err := getXML(url)
+
+	if err == nil {
+		reg := re.FindStringSubmatch(data)
+		if len(reg) > 1 {
+			str = reg[1]
+		}
+	}
+
+	return str
 }

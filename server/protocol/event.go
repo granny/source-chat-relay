@@ -60,35 +60,15 @@ func (m *EventMessage) Marshal() []byte {
 }
 
 func (m *EventMessage) Plain() string {
-
-	switch m.Event {
-	case "Map Start":
-		return strings.ReplaceAll(config.Config.Messages.EventFormatSimpleMapStart, "%data%", m.Data)
-	case "Map Ended":
-		return strings.ReplaceAll(config.Config.Messages.EventFormatSimpleMapEnd, "%data%", m.Data)
-	case "Player Connected":
-		return strings.ReplaceAll(config.Config.Messages.EventFormatSimplePlayerConnect, "%data%", m.Data)
-	case "Player Disconnected":
-		return strings.ReplaceAll(config.Config.Messages.EventFormatSimplePlayerDisconnect, "%data%", m.Data)
-	default:
-		return strings.ReplaceAll(strings.ReplaceAll(config.Config.Messages.EventFormatSimple, "%data%", m.Data), "%event%", m.Event)
-	}
-
+	return replacePlaceholders(m)
 }
 
 func (m *EventMessage) Embed() *discordgo.MessageEmbed {
 
-	phrases := [2]string{"@everyone", "@here"}
+	phrases := []string{"@everyone", "@here"}
 
-	for contains(phrases, m.Data) {
-		m.Data = strings.ReplaceAll(m.Data, phrases[0], "")
-		m.Data = strings.ReplaceAll(m.Data, phrases[1], "")
-	}
-
-	for contains(phrases, m.Event) {
-		m.Event = strings.ReplaceAll(m.Event, phrases[0], "")
-		m.Event = strings.ReplaceAll(m.Event, phrases[1], "")
-	}
+	m.Data = cutPhrases(m.Data, phrases)
+	m.Event = cutPhrases(m.Event, phrases)
 
 	return &discordgo.MessageEmbed{
 		Color:     16777215,
@@ -106,6 +86,17 @@ func (m *EventMessage) Embed() *discordgo.MessageEmbed {
 }
 
 func (m *EventMessage) Webhook() *discordgo.WebhookParams {
+
+	str := replacePlaceholders(m)
+	str = cutPhrases(str, []string{"@everyone", "@here"})
+
+	return &discordgo.WebhookParams{
+		Username: m.EntityName,
+		Content:  str,
+	}
+}
+
+func replacePlaceholders(m *EventMessage) string {
 	var str string
 
 	switch m.Event {
@@ -120,16 +111,5 @@ func (m *EventMessage) Webhook() *discordgo.WebhookParams {
 	default:
 		str = strings.ReplaceAll(strings.ReplaceAll(config.Config.Messages.EventFormatSimple, "%data%", m.Data), "%event%", m.Event)
 	}
-
-	phrases := [2]string{"@everyone", "@here"}
-
-	for contains(phrases, str) {
-		str = strings.ReplaceAll(str, phrases[0], "")
-		str = strings.ReplaceAll(str, phrases[1], "")
-	}
-
-	return &discordgo.WebhookParams{
-		Username: m.EntityName,
-		Content:  str,
-	}
+	return str
 }
