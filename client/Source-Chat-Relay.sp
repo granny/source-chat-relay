@@ -709,7 +709,7 @@ void DispatchMessage(int iClient, const char[] sMessage)
 
 	char tag[MAX_NAME_LENGTH], sBuffer[MAX_NAME_LENGTH];
 	CCC_GetTag(iClient, tag, sizeof tag);
-	Format(sBuffer, sizeof sBuffer, "%s %s", tag, sName);
+	Format(sBuffer, sizeof sBuffer, "%s%s", tag, sName);
 
 	Call_StartForward(g_hMessageSendForward);
 	Call_PushCell(iClient);
