@@ -1,6 +1,7 @@
 package protocol
 
 import (
+	"regexp"
 	"strings"
 	"time"
 
@@ -90,10 +91,22 @@ func (m *EventMessage) Webhook() *discordgo.WebhookParams {
 	str := replacePlaceholders(m)
 	str = cutPhrases(str, []string{"@everyone", "@here"})
 
-	return &discordgo.WebhookParams{
-		Username: m.EntityName,
-		Content:  str,
+	var webhook discordgo.WebhookParams
+
+	if m.Event == "ADMIN" {
+		re := regexp.MustCompile(`ID64{(.+)} NAME{(.+)} MSG{(.+)}`)
+		reg := re.FindStringSubmatch(m.Data)
+		if len(reg) > 1 {
+			webhook.AvatarURL = getAvatarURL("https://steamcommunity.com/profiles/" + reg[1] + "?xml=1")
+			webhook.Username = reg[2]
+			webhook.Content = reg[3]
+		}
+	} else {
+		webhook.Username = m.EntityName
+		webhook.Content = str
 	}
+
+	return &webhook
 }
 
 func replacePlaceholders(m *EventMessage) string {

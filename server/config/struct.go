@@ -1,8 +1,9 @@
 package config
 
 type GeneralConfig struct {
-	Port   int  `toml:"Port"`
-	Filter bool `toml:"Filter"`
+	Port      int    `toml:"Port"`
+	Filter    bool   `toml:"Filter"`
+	AdminChat string `toml:"AdminChat"`
 }
 
 type BotConfig struct {

@@ -8,6 +8,9 @@ Port = 57452
 # Note: can be expensive with a lot of regexes
 Filter = false
 
+# Admin Chat ID
+AdminChat = ""
+
 [Bot]
 # Bot token
 # You may obtain this at https://discordapp.com/developers/applications/
