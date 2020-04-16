@@ -88,8 +88,8 @@ func (m *EventMessage) Embed() *discordgo.MessageEmbed {
 
 func (m *EventMessage) Webhook() *discordgo.WebhookParams {
 
+	phrases := []string{"@everyone", "@here"}
 	str := replacePlaceholders(m)
-	str = cutPhrases(str, []string{"@everyone", "@here"})
 
 	var webhook discordgo.WebhookParams
 
@@ -99,11 +99,11 @@ func (m *EventMessage) Webhook() *discordgo.WebhookParams {
 		if len(reg) > 1 {
 			webhook.AvatarURL = getAvatarURL("https://steamcommunity.com/profiles/" + reg[1] + "?xml=1")
 			webhook.Username = reg[2]
-			webhook.Content = reg[3]
+			webhook.Content = cutPhrases(reg[3], phrases)
 		}
 	} else {
 		webhook.Username = m.EntityName
-		webhook.Content = str
+		webhook.Content = cutPhrases(str, phrases)
 	}
 
 	return &webhook
