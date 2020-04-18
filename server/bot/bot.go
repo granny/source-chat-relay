@@ -72,12 +72,12 @@ func Initialize() {
 
 			if strings.Contains(displayname, "%toprole%") {
 				roles, err := session.GuildRoles(m.GuildID)
-				var rolePos int = 250
+				var rolePos int
 
 				if err == nil && len(roles) != 0 && len(member.Roles) != 0 {
 					for _, role := range roles {
 						for _, mRole := range member.Roles {
-							if role.ID == mRole && role.Position < rolePos {
+							if role.ID == mRole && role.Position > rolePos {
 								rolePos = role.Position
 								toprole = role.Name
 							}
