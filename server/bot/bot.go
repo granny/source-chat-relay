@@ -62,11 +62,15 @@ func Initialize() {
 
 			member, err := session.GuildMember(m.GuildID, m.Author.ID)
 
-			displayname = strings.ReplaceAll(config.Config.Messages.ChatMessageDisplayName, "%nickname%", member.Nick)
+			if member.Nick != "" {
+				displayname = strings.ReplaceAll(displayname, "%nickname%", member.Nick)
+			} else {
+				displayname = strings.ReplaceAll(displayname, "%nickname%", m.Author.Username)
+			}
 
 			var toprole string
 
-			if strings.Contains(config.Config.Messages.ChatMessageDisplayName, "%toprole%") {
+			if strings.Contains(displayname, "%toprole%") {
 				roles, err := session.GuildRoles(m.GuildID)
 				var rolePos int = 250
 
@@ -87,7 +91,7 @@ func Initialize() {
 				}
 			}
 
-			displayname = strings.ReplaceAll(config.Config.Messages.ChatMessageDisplayName, "%toprole%", toprole)
+			displayname = strings.ReplaceAll(displayname, "%toprole%", toprole)
 
 			message := &protocol.ChatMessage{
 				BaseMessage: protocol.BaseMessage{
