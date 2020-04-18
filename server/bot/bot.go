@@ -77,7 +77,7 @@ func Initialize() {
 				if err == nil && len(roles) != 0 && len(member.Roles) != 0 {
 					for _, role := range roles {
 						for _, mRole := range member.Roles {
-							if role.Name == mRole && role.Position < rolePos {
+							if role.ID == mRole && role.Position < rolePos {
 								rolePos = role.Position
 								toprole = role.Name
 							}
