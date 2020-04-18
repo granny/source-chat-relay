@@ -60,39 +60,34 @@ func Initialize() {
 
 			displayname := strings.ReplaceAll(config.Config.Messages.ChatMessageDisplayName, "%username%", m.Author.Username)
 
-			if strings.Contains(config.Config.Messages.ChatMessageDisplayName, "%nickname%") {
-				member, err := session.GuildMember(m.GuildID, m.Author.ID)
-				toprole := ""
+			member, err := session.GuildMember(m.GuildID, m.Author.ID)
 
-				if err == nil {
-					if strings.Contains(config.Config.Messages.ChatMessageDisplayName, "%toprole%") {
-						roles, err2 := session.GuildRoles(m.GuildID)
-						if err2 == nil && len(roles) != 0 && len(member.Roles) != 0 {
-							for _, role := range roles {
-								if member.Roles[0] == role.ID {
-									toprole = role.Name
-								}
+			displayname = strings.ReplaceAll(config.Config.Messages.ChatMessageDisplayName, "%nickname%", member.Nick)
+
+			var toprole string
+
+			if strings.Contains(config.Config.Messages.ChatMessageDisplayName, "%toprole%") {
+				roles, err := session.GuildRoles(m.GuildID)
+				var rolePos int = 250
+
+				if err == nil && len(roles) != 0 && len(member.Roles) != 0 {
+					for _, role := range roles {
+						for _, mRole := range member.Roles {
+							if role.Name == mRole && role.Position < rolePos {
+								rolePos = role.Position
+								toprole = role.Name
 							}
 						}
 					}
-
-					if len(member.Nick) != 0 {
-						displayname = strings.ReplaceAll(displayname, "%nickname%", member.Nick)
-					} else {
-						displayname = strings.ReplaceAll(displayname, "%nickname%", m.Author.Username)
-					}
-
-					if toprole != "" {
-						displayname = strings.ReplaceAll(displayname, "%toprole%", toprole)
-					} else {
-						displayname = strings.ReplaceAll(displayname, "%toprole%", config.Config.Messages.ChatMessageNoRoleName)
+					if toprole == "" {
+						toprole = config.Config.Messages.ChatMessageNoRoleName
 					}
 				} else {
-					displayname = strings.ReplaceAll(displayname, "%nickname%", m.Author.Username)
-					displayname = strings.ReplaceAll(displayname, "%toprole%", config.Config.Messages.ChatMessageNoRoleName)
+					toprole = config.Config.Messages.ChatMessageNoRoleName
 				}
-
 			}
+
+			displayname = strings.ReplaceAll(config.Config.Messages.ChatMessageDisplayName, "%toprole%", toprole)
 
 			message := &protocol.ChatMessage{
 				BaseMessage: protocol.BaseMessage{
