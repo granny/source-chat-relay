@@ -26,6 +26,13 @@ func Listen() {
 					if channel.ID != message.Author() &&
 						tEntity.CanReceiveType(message.Type()) &&
 						tEntity.ReceiveIntersectsWith(entity.DeliverableSendChannels(message)) {
+
+						logrus.WithFields(logrus.Fields{
+							"Author":  message.Webhook().Username,
+							"Message": message.Content(),
+							"Type":    message.Type(),
+						}).Info("Message")
+
 						if !config.Config.Bot.SimpleMessage {
 							RelayBot.ChannelMessageSendEmbed(channel.ID, message.Embed())
 						} else if config.Config.Bot.Webhook {
