@@ -41,12 +41,12 @@ func Listen() {
 								logrus.Error(err.Error)
 							} else {
 								var id, token string
-								if message.Type() == protocol.MessageEvent && message.Webhook().AvatarURL != "" {
-									id, token = findWebhook(webhooks, config.Config.General.AdminChat)
+								webh := message.Webhook()
+								if message.Type() == protocol.MessageEvent && webh.AvatarURL != "" {
 								} else {
 									id, token = findWebhook(webhooks, channel.ID)
 								}
-								RelayBot.WebhookExecute(id, token, false, message.Webhook())
+								RelayBot.WebhookExecute(id, token, false, webh)
 							}
 						} else {
 							content := TransformMentions(RelayBot, channel.ID, message.Plain())
