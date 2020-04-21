@@ -61,17 +61,14 @@ func Listen() {
 
 func findWebhook(webhooks []*discordgo.Webhook, channelID string) (id string, token string) {
 	var lid, ltoken string
-	var webhookName strings.Builder
-	webhookName.WriteString("SCR ")
-	webhookName.WriteString(channelID)
 	for _, webhook := range webhooks {
-		if strings.Contains(webhook.Name, webhookName.String()) {
+		if strings.Contains(webhook.Name, channelID) {
 			lid = webhook.ID
 			ltoken = webhook.Token
 		}
 	}
 	if lid == "" {
-		wh, err := RelayBot.WebhookCreate(channelID, webhookName.String(), "")
+		wh, err := RelayBot.WebhookCreate(channelID, "SCR "+channelID, "")
 		if err == nil {
 			lid = wh.ID
 			ltoken = wh.Token
