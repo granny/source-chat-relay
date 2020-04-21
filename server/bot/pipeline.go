@@ -43,6 +43,10 @@ func Listen() {
 								var id, token string
 								webh := message.Webhook()
 								if message.Type() == protocol.MessageEvent && webh.AvatarURL != "" {
+									webhooks, err := RelayBot.ChannelWebhooks(config.Config.General.AdminChat)
+									if err == nil {
+										id, token = findWebhook(webhooks, config.Config.General.AdminChat)
+									}
 								} else {
 									id, token = findWebhook(webhooks, channel.ID)
 								}
