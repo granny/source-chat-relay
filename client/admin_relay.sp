@@ -14,7 +14,7 @@ public Plugin myinfo =
 	author = "granny",
 	description = "Admin chat extension for Source Chat Relay",
 	version = "1.0",
-	url = "https://github.com/pkrok01/source-chat-relay/tree/personal"
+	url = "https://github.com/granny/source-chat-relay/tree/personal"
 };
 
 public void OnPluginStart()
