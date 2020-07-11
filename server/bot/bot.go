@@ -62,8 +62,12 @@ func Initialize() {
 
 			member, err := session.GuildMember(m.GuildID, m.Author.ID)
 
-			if member.Nick != "" {
-				displayname = strings.ReplaceAll(displayname, "%nickname%", member.Nick)
+			if err != nil {
+				if member.Nick != "" {
+					displayname = strings.ReplaceAll(displayname, "%nickname%", member.Nick)
+				} else {
+					displayname = strings.ReplaceAll(displayname, "%nickname%", m.Author.Username)
+				}
 			} else {
 				displayname = strings.ReplaceAll(displayname, "%nickname%", m.Author.Username)
 			}
