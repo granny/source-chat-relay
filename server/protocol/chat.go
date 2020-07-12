@@ -73,6 +73,10 @@ func (m *ChatMessage) Content() string {
 	return m.Message
 }
 
+func (m *ChatMessage) EventMsg() string {
+	return m.ID
+}
+
 func (m *ChatMessage) Marshal() []byte {
 	var builder packet.PacketBuilder
 

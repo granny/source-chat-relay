@@ -6,7 +6,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/rumblefrog/source-chat-relay/server/config"
 	"github.com/rumblefrog/source-chat-relay/server/entity"
-	"github.com/rumblefrog/source-chat-relay/server/protocol"
 	"github.com/rumblefrog/source-chat-relay/server/relay"
 	"github.com/sirupsen/logrus"
 )
@@ -42,10 +41,15 @@ func Listen() {
 							} else {
 								var id, token string
 								webh := message.Webhook()
-								if message.Type() == protocol.MessageEvent && webh.AvatarURL != "" {
+								if message.EventMsg() == "ADMIN" {
 									webhooks, err := RelayBot.ChannelWebhooks(config.Config.General.AdminChat)
 									if err == nil {
 										id, token = findWebhook(webhooks, config.Config.General.AdminChat)
+									}
+								} else if message.EventMsg() == "ADMIN2" {
+									webhooks, err := RelayBot.ChannelWebhooks(config.Config.General.AdminChat2)
+									if err == nil {
+										id, token = findWebhook(webhooks, config.Config.General.AdminChat2)
 									}
 								} else {
 									id, token = findWebhook(webhooks, channel.ID)

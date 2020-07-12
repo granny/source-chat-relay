@@ -4,6 +4,7 @@ type GeneralConfig struct {
 	Port      int    `toml:"Port"`
 	Filter    bool   `toml:"Filter"`
 	AdminChat string `toml:"AdminChat"`
+	AdminChat2 string `toml:"AdminChat2"`
 }
 
 type BotConfig struct {

@@ -11,6 +11,9 @@ Filter = false
 # Admin Chat ID
 AdminChat = ""
 
+# 2nd Admin Chat ID
+AdminChat2 = ""
+
 [Bot]
 # Bot token
 # You may obtain this at https://discordapp.com/developers/applications/

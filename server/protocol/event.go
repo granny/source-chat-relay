@@ -48,6 +48,10 @@ func (m *EventMessage) Content() string {
 	return m.Data
 }
 
+func (m *EventMessage) EventMsg() string {
+	return m.Event
+}
+
 func (m *EventMessage) Marshal() []byte {
 	var builder packet.PacketBuilder
 

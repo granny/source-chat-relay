@@ -9,6 +9,7 @@ type Deliverable interface {
 	Type() MessageType
 	Marshal() []byte
 	Content() string
+	EventMsg() string
 	Author() string
 	Plain() string
 	Embed() *discordgo.MessageEmbed
