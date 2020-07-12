@@ -97,7 +97,7 @@ func (m *EventMessage) Webhook() *discordgo.WebhookParams {
 
 	var webhook discordgo.WebhookParams
 
-	if m.Event == "ADMIN" {
+	if m.Event == "ADMIN" || m.Event == "ADMIN2" {
 		re := regexp.MustCompile(`ID64{(.+)} NAME{(.+)} MSG{(.+)}`)
 		reg := re.FindStringSubmatch(m.Data)
 		if len(reg) > 1 {
