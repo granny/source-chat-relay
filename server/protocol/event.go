@@ -4,12 +4,10 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/rumblefrog/source-chat-relay/server/config"
 	"github.com/rumblefrog/source-chat-relay/server/packet"
-	"github.com/rumblefrog/source-chat-relay/server/config"
 )
 
 type EventMessage struct {
@@ -84,7 +82,7 @@ func (m *EventMessage) Embed() *discordgo.MessageEmbed {
 			Text: m.BaseMessage.EntityName,
 		},
 		Fields: []*discordgo.MessageEmbedField{
-			&discordgo.MessageEmbedField{
+			{
 				Name:  m.Event,
 				Value: m.Data,
 			},

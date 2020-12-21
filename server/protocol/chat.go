@@ -8,12 +8,10 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/rumblefrog/source-chat-relay/server/config"
 	"github.com/rumblefrog/source-chat-relay/server/packet"
-	"github.com/rumblefrog/source-chat-relay/server/config"
 )
 
 type IdentificationType uint8
